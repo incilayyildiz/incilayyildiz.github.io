@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dr. İncilay Yıldız</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8a96e;
+      --accent2: #7eb8c9;
+      --text: #e8e4dc;
+      --muted: #6b6878;
+      --card: #13131c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── GÜNLÜK BANNER ── */
+    #gunluk-banner {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--accent);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 0.5rem 1.5rem;
+      min-height: 36px;
+    }
+
+    .gunluk-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      opacity: 0.6;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .gunluk-divider {
+      width: 1px; height: 12px;
+      background: rgba(10,10,15,0.25);
+      flex-shrink: 0;
+    }
+
+    #gunluk-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      transition: background 0.2s;
+      max-width: 460px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #gunluk-text:hover { background: rgba(10,10,15,0.1); border-radius: 2px; }
+
+    #gunluk-input {
+      display: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      background: rgba(10,10,15,0.15);
+      border: none;
+      outline: none;
+      color: var(--bg);
+      text-align: center;
+      flex: 1;
+      max-width: 460px;
+      padding: 0.2rem 0.5rem;
+    }
+
+    #gunluk-input::placeholder { opacity: 0.5; }
+
+    .gunluk-char {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.5rem;
+      opacity: 0.55;
+      white-space: nowrap;
+      display: none;
+    }
+
+    .gunluk-edit-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      background: rgba(10,10,15,0.2);
+      border: none;
+      color: var(--bg);
+      cursor: pointer;
+      padding: 0.25rem 0.7rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .gunluk-edit-btn:hover { background: rgba(10,10,15,0.35); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 36px; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(10,10,15,0.85);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+      padding-top: 36px;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 4rem 4rem 4rem;
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-name em { font-style: italic; color: var(--accent); }
+
+    .hero-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(232,228,220,0.7);
+      max-width: 440px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1s;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+
+    .btn:hover { background: var(--accent); color: var(--bg); }
+
+    .btn-ghost { border-color: var(--border); color: var(--muted); }
+    .btn-ghost:hover { border-color: var(--text); color: var(--text); background: transparent; }
+
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .hero-visual { position: relative; width: 320px; height: 420px; }
+
+    .avatar-frame {
+      width: 100%; height: 100%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-initials {
+      font-size: 7rem;
+      font-weight: 300;
+      color: rgba(200,169,110,0.15);
+      letter-spacing: -0.05em;
+      font-style: italic;
+    }
+
+    .avatar-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(200,169,110,0.05) 100%);
+    }
+
+    .corner-tl, .corner-br { position: absolute; width: 20px; height: 20px; }
+    .corner-tl { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+    .corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+
+    .hero-right-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 70% 30%, rgba(126,184,201,0.04) 0%, transparent 60%),
+        radial-gradient(circle at 30% 70%, rgba(200,169,110,0.04) 0%, transparent 60%);
+    }
+
+    .info-strip {
+      position: absolute;
+      bottom: 3rem; left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 1px;
+    }
+
+    .info-chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 4rem; border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.3;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 3vw, 3.5rem);
+      font-weight: 300;
+      margin-bottom: 3rem;
+      line-height: 1.1;
+    }
+
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* ── RESEARCH GRID ── */
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .research-card {
+      background: var(--card);
+      padding: 2rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .research-card:hover { background: #1a1a26; }
+
+    .research-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 2px; height: 0;
+      background: var(--accent);
+      transition: height 0.4s ease;
+    }
+
+    .research-card:hover::before { height: 100%; }
+
+    .research-icon { font-size: 1.5rem; margin-bottom: 1rem; display: block; }
+    .research-card h3 { font-size: 1.1rem; font-weight: 400; margin-bottom: 0.5rem; line-height: 1.3; }
+    .research-card p { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    /* ── INTERESTS ── */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .interest-card {
+      background: var(--card);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interest-card:hover { background: #1a1a26; }
+
+    .interest-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent2);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .interest-card:hover::after { transform: scaleX(1); }
+
+    .interest-emoji { font-size: 2rem; line-height: 1; }
+    .interest-name { font-size: 1.2rem; font-weight: 300; }
+    .interest-sub { font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* ── POSITIONS ── */
+    .positions { display: flex; flex-direction: column; gap: 1px; }
+
+    .position-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 1.8rem 2rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      transition: background 0.3s;
+      gap: 2rem;
+    }
+
+    .position-row:hover { background: #1a1a26; }
+    .position-role { font-size: 1.3rem; font-weight: 300; margin-bottom: 0.3rem; }
+    .position-dept { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .position-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      border: 1px solid rgba(126,184,201,0.3);
+      padding: 0.3rem 0.8rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── CONTACT ── */
+    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contact-item:last-child { border-bottom: none; }
+    .contact-label { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+    .contact-value { font-size: 1.1rem; font-weight: 300; }
+    .contact-value a { color: var(--text); text-decoration: none; transition: color 0.3s; }
+    .contact-value a:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    .footer-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; top: 36px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 7rem 1.5rem 3rem; }
+      section { padding: 4rem 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GÜNLÜK BANNER -->
+  <div id="gunluk-banner">
+    <span class="gunluk-date" id="gunluk-date-label"></span>
+    <div class="gunluk-divider"></div>
+    <span id="gunluk-text" title="Düzenlemek için tıkla">✦ Bugün ne var?</span>
+    <input id="gunluk-input" type="text" maxlength="50" placeholder="Bugünü 50 karakterle anlat..." />
+    <span class="gunluk-char" id="gunluk-char">50</span>
+    <button class="gunluk-edit-btn" id="gunluk-btn" onclick="toggleGunluk()">Düzenle</button>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">İ. Yıldız</div>
+    <ul class="nav-links">
+      <li><a href="#arastirma">Araştırma</a></li>
+      <li><a href="#ilgiler">İlgiler</a></li>
+      <li><a href="#gorevler">Görevler</a></li>
+      <li><a href="#iletisim">İletişim</a></li>
+      <li><a href="#" style="color:var(--accent2)">EN</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" style="border-top: none; padding-bottom: 0;">
+    <div class="hero-left">
+      <span class="hero-tag">Altınbaş Üniversitesi · İstanbul</span>
+      <h1 class="hero-name">Dr. <em>İncilay</em><br>Yıldız</h1>
+      <p class="hero-title">Doktor Öğretim Üyesi &nbsp;·&nbsp; Bölüm Başkanı</p>
+      <p class="hero-desc">
+        Yapay zeka, makine öğrenmesi ve dijital dönüşüm alanlarında araştırma yürüten akademisyen. Yönetim Bilişim Sistemleri ve Yazılım Geliştirme bölümlerinde görev yapmaktadır.
+      </p>
+      <div class="hero-cta">
+        <a href="#iletisim" class="btn">İletişime Geç</a>
+        <a href="https://web.altinbas.edu.tr/incilay.yildiz/cv/?L=TR" target="_blank" class="btn btn-ghost">Akademik CV</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-right-bg"></div>
+      <div class="hero-visual">
+        <div class="avatar-frame">
+          <span class="avatar-initials">İY</span>
+          <div class="corner-tl"></div>
+          <div class="corner-br"></div>
+        </div>
+      </div>
+      <div class="info-strip">
+        <div class="info-chip">YBS</div>
+        <div class="info-chip">Yapay Zeka</div>
+        <div class="info-chip">Endüstri 4.0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="arastirma">
+    <div class="section-label">Araştırma Alanları</div>
+    <h2 class="section-title">Akademik<br><em>Uzmanlıklar</em></h2>
+    <div class="research-grid">
+      <div class="research-card"><span class="research-icon">🤖</span><h3>Yapay Zeka</h3><p>Artificial Intelligence</p></div>
+      <div class="research-card"><span class="research-icon">🧠</span><h3>Makine Öğrenmesi & Derin Öğrenme</h3><p>Machine Learning & Deep Learning</p></div>
+      <div class="research-card"><span class="research-icon">💼</span><h3>Yönetim Bilişim Sistemleri</h3><p>Management Information Systems</p></div>
+      <div class="research-card"><span class="research-icon">🏭</span><h3>Endüstri 4.0 ve Dijital Dönüşüm</h3><p>Industry 4.0 & Digital Transformation</p></div>
+      <div class="research-card"><span class="research-icon">👁️</span><h3>Bilgisayarlı Görü</h3><p>Computer Vision</p></div>
+      <div class="research-card"><span class="research-icon">📊</span><h3>Veri Analizi ve Büyük Veri</h3><p>Data Analysis & Big Data</p></div>
+      <div class="research-card"><span class="research-icon">📦</span><h3>Üretim Yönetimi ve Çizelgeleme</h3><p>Production Management & Scheduling</p></div>
+      <div class="research-card"><span class="research-icon">🔍</span><h3>İş Zekası ve Sistemleri</h3><p>Business Intelligence & Systems</p></div>
+    </div>
+  </section>
+
+  <!-- PERSONAL INTERESTS -->
+  <section id="ilgiler">
+    <div class="section-label">Kişisel İlgi Alanları</div>
+    <h2 class="section-title">Akademinin<br><em>Ötesinde</em></h2>
+    <div class="interests-grid">
+      <div class="interest-card">
+        <span class="interest-emoji">🚴</span>
+        <span class="interest-name">Bisiklet</span>
+        <span class="interest-sub">Şehir & Doğa</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">🌊</span>
+        <span class="interest-name">Deniz</span>
+        <span class="interest-sub">Yüzme & Dalış</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">🎸</span>
+        <span class="interest-name">Gitar</span>
+        <span class="interest-sub">Elektrik & Akustik</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">🎵</span>
+        <span class="interest-name">Rock'n'Roll</span>
+        <span class="interest-sub">Klasik & Modern</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">📷</span>
+        <span class="interest-name">Fotoğraf</span>
+        <span class="interest-sub">Sokak & Doğa</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">📚</span>
+        <span class="interest-name">Okumak</span>
+        <span class="interest-sub">Bilim & Kurgu</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">✈️</span>
+        <span class="interest-name">Seyahat</span>
+        <span class="interest-sub">Keşif & Kültür</span>
+      </div>
+      <div class="interest-card">
+        <span class="interest-emoji">☕</span>
+        <span class="interest-name">Kahve</span>
+        <span class="interest-sub">Specialty & Filter</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSITIONS -->
+  <section id="gorevler">
+    <div class="section-label">Akademik Görevler</div>
+    <h2 class="section-title">Mevcut<br><em>Pozisyonlar</em></h2>
+    <div class="positions">
+      <div class="position-row">
+        <div>
+          <div class="position-role">Doktor Öğretim Üyesi</div>
+          <div class="position-dept">Yönetim Bilişim Sistemleri Bölümü · Altınbaş Üniversitesi</div>
+        </div>
+        <div class="position-badge">Aktif</div>
+      </div>
+      <div class="position-row">
+        <div>
+          <div class="position-role">Bölüm Başkanı</div>
+          <div class="position-dept">Yazılım Geliştirme Bölümü · Altınbaş Üniversitesi</div>
+        </div>
+        <div class="position-badge">Aktif</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="iletisim">
+    <div class="section-label">İletişim</div>
+    <h2 class="section-title">Bana<br><em>Ulaşın</em></h2>
+    <div class="contact-info" style="max-width: 560px;">
+      <div class="contact-item">
+        <span class="contact-label">E-posta</span>
+        <span class="contact-value"><a href="mailto:incilay.yildiz@altinbas.edu.tr">incilay.yildiz@altinbas.edu.tr</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Telefon</span>
+        <span class="contact-value"><a href="tel:+902126040100">+90 (212) 604 01 00 / 2534</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Kampüs</span>
+        <span class="contact-value">Gayrettepe Sosyal Bilimler Yerleşkesi</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Web</span>
+        <span class="contact-value"><a href="https://web.altinbas.edu.tr/incilay.yildiz" target="_blank">web.altinbas.edu.tr/incilay.yildiz</a></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Dr. İncilay Yıldız · Altınbaş Üniversitesi</span>
+    <div class="footer-dot"></div>
+    <span class="footer-text">İstanbul, Türkiye</span>
+  </footer>
+
+  <script>
+    // ── TARİH ──
+    const days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+    const months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const now = new Date();
+    document.getElementById('gunluk-date-label').textContent =
+      days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()];
+
+    // ── GÜNLÜK ──
+    const KEY = 'gunluk_' + now.toISOString().slice(0,10);
+    const textEl   = document.getElementById('gunluk-text');
+    const inputEl  = document.getElementById('gunluk-input');
+    const btnEl    = document.getElementById('gunluk-btn');
+    const charEl   = document.getElementById('gunluk-char');
+
+    // Load saved note for today
+    const saved = localStorage.getItem(KEY);
+    if (saved) textEl.textContent = saved;
+
+    let editing = false;
+
+    function toggleGunluk() {
+      editing = !editing;
+      if (editing) {
+        inputEl.value = (textEl.textContent === '✦ Bugün ne var?') ? '' : textEl.textContent;
+        textEl.style.display = 'none';
+        inputEl.style.display = 'block';
+        charEl.style.display = 'inline';
+        charEl.textContent = 50 - inputEl.value.length;
+        btnEl.textContent = 'Kaydet';
+        inputEl.focus();
+      } else {
+        const val = inputEl.value.trim();
+        textEl.textContent = val || '✦ Bugün ne var?';
+        if (val) localStorage.setItem(KEY, val);
+        textEl.style.display = 'block';
+        inputEl.style.display = 'none';
+        charEl.style.display = 'none';
+        btnEl.textContent = 'Düzenle';
+      }
+    }
+
+    inputEl.addEventListener('input', () => {
+      charEl.textContent = 50 - inputEl.value.length;
+    });
+
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') toggleGunluk();
+      if (e.key === 'Escape') { editing = true; toggleGunluk(); }
+    });
+
+    textEl.addEventListener('click', () => { if (!editing) toggleGunluk(); });
+  </script>
+
+</body>
+</html>
