@@ -1,289 +1,783 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dr. İncilay Yıldız</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg: #0a0a0f; --surface: #111118; --border: rgba(255,255,255,0.07); --accent: #c8a96e; --accent2: #7eb8c9; --text: #e8e4dc; --muted: #6b6878; --card: #13131c; }
+
+    :root {
+      --bg:        #0c0e12;
+      --bg2:       #111318;
+      --bg3:       #161a20;
+      --border:    rgba(255,255,255,0.08);
+      --border2:   rgba(255,255,255,0.04);
+      --gold:      #b8966a;
+      --gold-light:#d4b896;
+      --blue:      #6b9ab8;
+      --text:      #e2ddd6;
+      --text2:     #9a9590;
+      --text3:     #5a5650;
+      --card:      #13161c;
+    }
+
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', Georgia, serif; min-height: 100vh; overflow-x: hidden; }
-    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
 
-    #gunluk-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--accent); color: var(--bg); display: flex; align-items: center; justify-content: center; gap: 0.8rem; padding: 0.5rem 1.5rem; min-height: 36px; }
-    .gunluk-date { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; opacity: 0.6; text-transform: uppercase; white-space: nowrap; }
-    .gunluk-divider { width: 1px; height: 12px; background: rgba(10,10,15,0.25); flex-shrink: 0; }
-    #gunluk-text { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; flex: 1; text-align: center; cursor: pointer; padding: 0.2rem 0.5rem; transition: background 0.2s; max-width: 460px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #gunluk-text:hover { background: rgba(10,10,15,0.1); border-radius: 2px; }
-    #gunluk-input { display: none; font-family: 'DM Mono', monospace; font-size: 0.65rem; background: rgba(10,10,15,0.15); border: none; outline: none; color: var(--bg); text-align: center; flex: 1; max-width: 460px; padding: 0.2rem 0.5rem; }
-    #gunluk-input::placeholder { opacity: 0.5; }
-    .gunluk-char { font-family: 'DM Mono', monospace; font-size: 0.5rem; opacity: 0.55; white-space: nowrap; display: none; }
-    .gunluk-edit-btn { font-family: 'DM Mono', monospace; font-size: 0.5rem; letter-spacing: 0.1em; background: rgba(10,10,15,0.2); border: none; color: var(--bg); cursor: pointer; padding: 0.25rem 0.7rem; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
-    .gunluk-edit-btn:hover { background: rgba(10,10,15,0.35); }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-    nav { position: fixed; top: 36px; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 4rem; border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); background: rgba(10,10,15,0.85); }
-    .nav-logo { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.3s; }
+    /* ── GRAIN ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── BANNER ── */
+    #banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      height: 36px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .banner-sep { width: 1px; height: 12px; background: var(--border); }
+    .banner-day {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-style: italic; font-weight: 400;
+      color: var(--gold); line-height: 1;
+    }
+    .banner-weekday {
+      font-size: 0.6rem; letter-spacing: 0.25em;
+      color: var(--text2); text-transform: uppercase;
+    }
+    .banner-month {
+      font-size: 0.6rem; letter-spacing: 0.15em;
+      color: var(--text3); text-transform: uppercase;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 36px; left: 0; right: 0; z-index: 400;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem;
+      height: 56px;
+      background: rgba(12,14,18,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .nav-brand span { color: var(--gold); font-style: italic; }
+
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.12em;
+      color: var(--text2); text-decoration: none;
+      text-transform: uppercase; transition: color 0.25s;
+    }
     .nav-links a:hover { color: var(--text); }
+    .nav-links a.lang { color: var(--bg); background: var(--gold); font-style: italic; padding: 0.2rem 0.55rem; }
+    .nav-links a.lang:hover { background: var(--gold-light); color: var(--bg); }
 
-    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; padding-top: 36px; }
-    .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 8rem 4rem 4rem 4rem; }
-    .hero-tag { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.25em; color: var(--accent); text-transform: uppercase; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; }
-    .hero-name { font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.5rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s; }
-    .hero-name em { font-style: italic; color: var(--accent); }
-    .hero-title { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s; }
-    .hero-desc { font-size: 1.15rem; font-weight: 300; line-height: 1.8; color: rgba(232,228,220,0.7); max-width: 440px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s; }
-    .hero-cta { display: flex; gap: 1rem; opacity: 0; animation: fadeUp 0.8s ease forwards 1s; }
-    .btn { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.9rem 2rem; border: 1px solid var(--accent); color: var(--accent); background: transparent; cursor: pointer; text-decoration: none; transition: all 0.3s; display: inline-block; }
-    .btn:hover { background: var(--accent); color: var(--bg); }
-    .btn-ghost { border-color: var(--border); color: var(--muted); }
-    .btn-ghost:hover { border-color: var(--text); color: var(--text); background: transparent; }
+    /* ── HERO — iki sütun ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 92px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 85% 50%, rgba(184,150,106,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 60% at 15% 40%, rgba(107,154,184,0.04) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      display: contents;
+    }
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 4rem 3rem;
+      text-align: center;
+    }
+    .hero-left .hero-eyebrow { text-align: center; }
+    .hero-left .hero-name { justify-content: center; }
+    .hero-left .hero-bio { text-align: center; }
+    .hero-left .hero-actions { justify-content: center; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .hero-right-info {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-right-info img.hero-photo-full {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 15%;
+      display: block;
+      filter: grayscale(10%) contrast(1.05);
+    }
+    .hero-right-info::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 55%, rgba(12,14,18,0.75) 100%);
+    }
+    .hero-right-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      z-index: 2;
+      padding: 2rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .hero-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem; letter-spacing: 0.2em;
+      color: var(--gold); text-transform: uppercase;
+      display: block; margin-bottom: 0.3rem;
+    }
+    .hero-stat-value {
+      font-size: 0.9rem; font-weight: 300; color: var(--text);
+      line-height: 1.4;
+    }
+    .hero-stat-value em { font-style: italic; color: var(--gold-light); }
+    .membership-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.08em;
+      color: var(--text2);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      backdrop-filter: blur(8px);
+      background: rgba(12,14,18,0.5);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .membership-badge:hover { border-color: var(--gold); color: var(--gold); }
+    .membership-badge svg { flex-shrink: 0; color: var(--gold); }
 
-    .hero-right { position: relative; display: flex; align-items: center; justify-content: center; border-left: 1px solid var(--border); overflow: hidden; }
-    .hero-visual { position: relative; width: 320px; height: 420px; }
-    .avatar-frame { width: 100%; height: 100%; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-    .avatar-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
-    .avatar-frame::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 60%, rgba(200,169,110,0.08) 100%); }
-    .corner-tl, .corner-br { position: absolute; width: 20px; height: 20px; }
-    .corner-tl { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
-    .corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
-    .hero-right-bg { position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, rgba(126,184,201,0.04) 0%, transparent 60%), radial-gradient(circle at 30% 70%, rgba(200,169,110,0.04) 0%, transparent 60%); }
-    .info-strip { position: absolute; bottom: 3rem; left: 0; right: 0; display: flex; justify-content: center; gap: 1px; }
-    .info-chip { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; padding: 0.5rem 1rem; border: 1px solid var(--border); background: var(--surface); }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.25em;
+      color: var(--gold); text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+    }
 
-    section { padding: 6rem 4rem; border-top: 1px solid var(--border); }
-    .section-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
-    .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); opacity: 0.3; }
-    .section-title { font-size: clamp(2rem, 3vw, 3.5rem); font-weight: 300; margin-bottom: 3rem; line-height: 1.1; }
-    .section-title em { font-style: italic; color: var(--accent); }
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      font-weight: 400; line-height: 1.08;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      opacity: 0; animation: rise 0.7s ease forwards 0.25s;
+      display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+    }
 
-    .research-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .research-card { background: var(--card); padding: 2rem; transition: background 0.3s; position: relative; overflow: hidden; }
-    .research-card:hover { background: #1a1a26; }
-    .research-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 0; background: var(--accent); transition: height 0.4s ease; }
-    .research-card:hover::before { height: 100%; }
-    .research-icon { font-size: 1.5rem; margin-bottom: 1rem; display: block; }
-    .research-card h3 { font-size: 1.1rem; font-weight: 400; margin-bottom: 0.5rem; line-height: 1.3; }
-    .research-card p { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
+    .hero-name .dr { color: var(--gold); font-style: italic; }
 
-    .interests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .interest-card { background: var(--card); padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; transition: background 0.3s; position: relative; overflow: hidden; }
-    .interest-card:hover { background: #1a1a26; }
-    .interest-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent2); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
-    .interest-card:hover::after { transform: scaleX(1); }
-    .interest-emoji { font-size: 2rem; line-height: 1; }
-    .interest-name { font-size: 1.2rem; font-weight: 300; }
-    .interest-sub { font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .hero-avatar {
+      width: 110px; height: 110px; border-radius: 50%;
+      object-fit: cover; object-position: center 15%;
+      border: 2px solid var(--gold);
+      flex-shrink: 0;
+      filter: grayscale(10%);
+    }
 
-    .positions { display: flex; flex-direction: column; gap: 1px; }
-    .position-row { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 1.8rem 2rem; border: 1px solid var(--border); background: var(--card); transition: background 0.3s; gap: 2rem; }
-    .position-row:hover { background: #1a1a26; }
-    .position-role { font-size: 1.3rem; font-weight: 300; margin-bottom: 0.3rem; }
-    .position-dept { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-    .position-badge { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; color: var(--accent2); border: 1px solid rgba(126,184,201,0.3); padding: 0.3rem 0.8rem; text-transform: uppercase; white-space: nowrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; gap: 0.3rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border2);
+    }
+    .hero-stat:last-child { border-bottom: none; }
+    .hero-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem; letter-spacing: 0.2em;
+      color: var(--text3); text-transform: uppercase;
+    }
+    .hero-stat-value {
+      font-size: 1rem; font-weight: 300; color: var(--text);
+      line-height: 1.4;
+    }
+    .hero-stat-value em { font-style: italic; color: var(--gold); }
 
-    .profiles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .profile-card { background: var(--card); padding: 2rem; text-decoration: none; color: var(--text); transition: background 0.3s, transform 0.3s; position: relative; overflow: hidden; }
-    .profile-card:hover { background: #1a1a26; transform: translateY(-4px); }
-    .profile-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 0; background: var(--accent2); transition: height 0.4s ease; }
-    .profile-card:hover::before { height: 100%; }
-    .profile-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .profile-card h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.5rem; }
-    .profile-card p { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.7; }
-    .scholar { color: #7eb8c9; }
-    .orcid { color: #a6ce39; }
-    .linkedin { color: #0a66c2; }
+    .membership-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.08em;
+      color: var(--text2);
+    }
+    .membership-row svg { color: var(--gold); flex-shrink: 0; }
 
-    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
-    .contact-item { display: flex; flex-direction: column; gap: 0.3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-    .contact-item:last-child { border-bottom: none; }
-    .contact-label { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
-    .contact-value { font-size: 1.1rem; font-weight: 300; }
-    .contact-value a { color: var(--text); text-decoration: none; transition: color 0.3s; }
-    .contact-value a:hover { color: var(--accent); }
+    .hero-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      color: var(--text2); text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0; animation: rise 0.7s ease forwards 0.4s;
+    }
 
-    footer { border-top: 1px solid var(--border); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; }
-    .footer-text { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
-    .footer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+    .hero-bio {
+      font-size: 1.05rem; font-weight: 300;
+      line-height: 1.85; color: var(--text2);
+      margin-bottom: 2.5rem;
+      opacity: 0; animation: rise 0.7s ease forwards 0.55s;
+      text-align: justify;
+    }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+    .hero-bio strong { color: var(--text); font-weight: 400; }
 
-    @media (max-width: 768px) {
-      nav { padding: 1.2rem 1.5rem; top: 36px; }
-      .nav-links { display: none; }
-      .hero { grid-template-columns: 1fr; }
-      .hero-right { display: none; }
-      .hero-left { padding: 7rem 1.5rem 3rem; }
-      section { padding: 4rem 1.5rem; }
-      footer { padding: 1.5rem; flex-direction: column; gap: 1rem; }
+    .hero-actions {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      opacity: 0; animation: rise 0.7s ease forwards 0.7s;
+    }
+
+    .btn-primary {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 0.75rem 1.75rem;
+      background: var(--gold); color: var(--bg);
+      border: 1px solid var(--gold);
+      transition: all 0.25s; cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+    .btn-outline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 0.75rem 1.75rem;
+      background: transparent; color: var(--text2);
+      border: 1px solid var(--border);
+      transition: all 0.25s; cursor: pointer;
+    }
+    .btn-outline:hover { border-color: var(--text2); color: var(--text); }
+
+    .hero-memberships { display: flex; align-items: center; gap: 0.5rem; }
+
+    .membership-badge {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.1em;
+      color: var(--text3); text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .membership-badge:hover { color: var(--text2); border-color: rgba(255,255,255,0.15); }
+
+    /* Hero photo panel */
+    .hero-photo {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg2);
+      overflow: hidden;
+    }
+
+    .hero-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+      filter: grayscale(15%) contrast(1.05);
+    }
+
+    .hero-photo::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(12,14,18,0.6) 100%);
+    }
+
+    .photo-caption {
+      position: absolute; bottom: 2rem; left: 0; right: 0;
+      display: flex; justify-content: center; gap: 0.5rem;
+      z-index: 2;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      background: rgba(12,14,18,0.75);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0 3rem; margin-bottom: 3rem;
+    }
+    .section-divider::before, .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .section-divider-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.3em;
+      color: var(--gold); text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 3rem; border-top: 1px solid var(--border); }
+
+    .section-header { margin-bottom: 3rem; }
+
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.2em;
+      color: var(--gold); text-transform: uppercase;
+      display: block; margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 400; line-height: 1.15;
+    }
+
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* ── RESEARCH ── */
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border2);
+      border: 1px solid var(--border);
+    }
+
+    .r-card {
+      background: var(--card);
+      padding: 1.75rem;
+      transition: background 0.25s;
+      position: relative;
+    }
+    .r-card:hover { background: #1a1e26; }
+    .r-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; background: var(--gold);
+      transform: scaleY(0); transform-origin: bottom;
+      transition: transform 0.35s ease;
+    }
+    .r-card:hover::before { transform: scaleY(1); }
+
+    .r-icon { width: 28px; height: 28px; margin-bottom: 1rem; display: block; color: var(--gold); opacity: 0.8; }
+    .r-icon svg { width: 100%; height: 100%; }
+    .r-title { font-size: 1rem; font-weight: 400; margin-bottom: 0.3rem; line-height: 1.3; }
+    .r-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; color: var(--text3);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    /* ── INTERESTS ── */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 1px;
+      background: var(--border2);
+      border: 1px solid var(--border);
+    }
+
+    .i-card {
+      background: var(--card);
+      padding: 1.5rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      transition: background 0.25s; position: relative; overflow: hidden;
+    }
+    .i-card:hover { background: #1a1e26; }
+    .i-card::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--blue);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .i-card:hover::after { transform: scaleX(1); }
+    .i-card--wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 1rem; }
+    .i-card--wide .i-icon { color: var(--gold); opacity: 0.9; }
+
+    .i-icon { width: 24px; height: 24px; color: #b85c5c; opacity: 0.85; flex-shrink: 0; }
+    .i-icon svg { width: 100%; height: 100%; }
+    .i-name { font-size: 1rem; font-weight: 400; }
+    .i-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem; color: var(--text3);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    /* ── POSITIONS ── */
+    .positions { display: flex; flex-direction: column; gap: 1px; background: var(--border2); }
+
+    .p-row {
+      background: var(--card);
+      padding: 1.75rem 2rem;
+      display: grid; grid-template-columns: auto 1fr auto;
+      align-items: center; gap: 1.5rem;
+      transition: background 0.25s;
+      border: 1px solid var(--border);
+    }
+    .p-row:hover { background: #1a1e26; }
+
+    .p-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 400; font-style: italic;
+      color: var(--border); line-height: 1;
+      min-width: 2rem; text-align: center;
+    }
+
+    .p-role {
+      font-size: 1.1rem; font-weight: 400;
+      margin-bottom: 0.25rem;
+    }
+
+    .p-dept {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; color: var(--text3);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    .p-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem; letter-spacing: 0.1em;
+      color: var(--blue); text-transform: uppercase;
+      border: 1px solid rgba(107,154,184,0.3);
+      padding: 0.25rem 0.65rem; white-space: nowrap;
+    }
+
+    /* ── CONTACT ── */
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .contact-list { display: flex; flex-direction: column; }
+
+    .c-item {
+      display: grid; grid-template-columns: 120px 1fr;
+      align-items: baseline; gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border2);
+    }
+    .c-item:last-child { border-bottom: none; }
+
+    .c-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.15em;
+      color: var(--text3); text-transform: uppercase;
+    }
+
+    .c-val { font-size: 0.95rem; font-weight: 300; }
+    .c-val a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .c-val a:hover { color: var(--gold); }
+
+    .contact-card {
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 2rem;
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+
+    .cc-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .cc-body {
+      font-size: 0.9rem; font-weight: 300;
+      color: var(--text2); line-height: 1.7;
+      text-align: justify;
+    }
+
+    .cc-univ {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.12em;
+      color: var(--text3); text-transform: uppercase;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border2);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; color: var(--text3); letter-spacing: 0.1em;
+    }
+
+    .footer-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold); animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { gap: 1.2rem; }
+      .nav-links a { font-size: 0.55rem; }
+
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-right-info { height: 60vw; max-height: 380px; }
+      .hero-left { padding: 2.5rem 1.25rem; }
+      .hero-name { font-size: 2.6rem; }
+      .i-card--wide { grid-column: span 1; flex-direction: column; align-items: flex-start; }
+
+      section { padding: 3rem 1.25rem; }
+
+      .research-grid { grid-template-columns: 1fr 1fr; }
+      .interests-grid { grid-template-columns: repeat(3, 1fr); }
+
+      .p-row { grid-template-columns: 1fr auto; }
+      .p-num { display: none; }
+
+      .contact-wrap { grid-template-columns: 1fr; gap: 2rem; }
+      .c-item { grid-template-columns: 100px 1fr; }
+
+      footer { padding: 1.25rem; }
+    }
+
+    @media (max-width: 540px) {
+      .hero-name { font-size: 2.1rem; }
+      .hero-bio { font-size: 0.95rem; }
+      .nav-links li:not(:last-child):not(:nth-last-child(2)) { display: none; }
+
+      .research-grid { grid-template-columns: 1fr; }
+      .interests-grid { grid-template-columns: 1fr 1fr; }
+
+      #banner { font-size: 0.55rem; gap: 0.5rem; padding: 0 0.75rem; }
+      #banner-date { display: none; }
+      #banner-sep { display: none; }
     }
   </style>
 </head>
 <body>
-  <div id="gunluk-banner">
-    <span class="gunluk-date" id="gunluk-date-label"></span>
-    <div class="gunluk-divider"></div>
-    <span id="gunluk-text" title="Düzenlemek için tıkla">✦ Bugün ne var?</span>
-    <input id="gunluk-input" type="text" maxlength="50" placeholder="Bugünü 50 karakterle anlat..." />
-    <span class="gunluk-char" id="gunluk-char">50</span>
-    <button class="gunluk-edit-btn" id="gunluk-btn" onclick="toggleGunluk()">Düzenle</button>
+
+  <!-- BANNER -->
+  <div id="banner">
+    <span class="banner-weekday" id="banner-weekday"></span>
+    <div class="banner-sep"></div>
+    <span class="banner-day" id="banner-day-num"></span>
+    <div class="banner-sep"></div>
+    <span class="banner-month" id="banner-month"></span>
   </div>
 
+  <!-- NAV -->
   <nav>
-    <div class="nav-logo">İ. Yıldız</div>
+    <div class="nav-brand"><span>Dr.</span> İncilay Yıldız</div>
     <ul class="nav-links">
       <li><a href="#arastirma">Araştırma</a></li>
       <li><a href="#ilgiler">İlgiler</a></li>
       <li><a href="#gorevler">Görevler</a></li>
-      <li><a href="#profiller">Profiller</a></li>
       <li><a href="#iletisim">İletişim</a></li>
-      <li><a href="index-en.html" style="color:#7eb8c9">EN</a></li>
+      <li><a href="index-en.html" class="lang">EN</a></li>
     </ul>
   </nav>
 
-  <section class="hero" style="border-top: none; padding-bottom: 0;">
-    <div class="hero-left">
-      <span class="hero-tag">Altınbaş Üniversitesi · İstanbul</span>
-      <h1 class="hero-name"><em>Dr.</em> İncilay<br>Yıldız</h1>
-      <p class="hero-title">Doktor Öğretim Üyesi &nbsp;·&nbsp; Bölüm Başkanı</p>
-      <p class="hero-desc">Yapay zeka alanlarında araştırma yürüten endüstri mühendisi ve akademisyen. Yönetim Bilişim Sistemleri ve Yazılım Geliştirme bölümlerinde görev yapmaktadır.</p>
-      <div class="hero-cta">
-        <a href="https://web.altinbas.edu.tr/incilay.yildiz/cv/?L=TR" target="_blank" class="btn btn-ghost">Akademik CV</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="hero-right-bg"></div>
-      <div class="hero-visual">
-        <div class="avatar-frame">
-          <img src="photo.jpg" alt="Dr. İncilay Yıldız" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;" />
-          <div class="corner-tl"></div>
-          <div class="corner-br"></div>
+  <!-- HERO -->
+  <section class="hero" style="border-top:none; padding:0;">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <span class="hero-eyebrow">Altınbaş Üniversitesi · İstanbul</span>
+        <h1 class="hero-name"><img src="photo.jpg" class="hero-avatar" alt=""/><span><span class="dr">Dr.</span> İncilay<br>Yıldız</span></h1>
+        <p class="hero-role">Doktor Öğretim Üyesi &nbsp;·&nbsp; Bölüm Başkanı</p>
+        <p class="hero-bio">
+          Yapay zeka alanlarında araştırma yürüten Endüstri Mühendisi ve Akademisyen.
+          Yönetim Bilişim Sistemleri ve Yazılım Geliştirme bölümlerinde görev yapmaktadır.
+        </p>
+        <div class="hero-actions">
+          <a href="https://akademik.yok.gov.tr/AkademikArama/view/viewAuthor.jsp" target="_blank" class="btn-primary">Akademik CV</a>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;">
+            <a href="https://scholar.google.com.tr/citations?user=RcEwxeQAAAAJ&hl=tr" target="_blank" class="membership-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+              Google Scholar
+            </a>
+            <a href="https://www.linkedin.com/in/incilayyildiz/" target="_blank" class="membership-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              LinkedIn
+            </a>
+          </div>
         </div>
       </div>
-      <div class="info-strip">
-        <div class="info-chip">YBS</div>
-        <div class="info-chip">Yapay Zeka</div>
-        <div class="info-chip">Endüstri 4.0</div>
+      <div class="hero-right-info">
+        <img src="photo.jpg" class="hero-photo-full" alt="Dr. İncilay Yıldız"/>
+        <div class="hero-right-overlay"></div>
       </div>
     </div>
   </section>
 
+  <!-- RESEARCH -->
   <section id="arastirma">
-    <div class="section-label">Araştırma Alanları</div>
-    <h2 class="section-title">Akademik<br><em>Uzmanlıklar</em></h2>
+    <div class="section-header">
+      <span class="section-num">01 — Araştırma</span>
+      <h2 class="section-title">Akademik <em>Uzmanlıklar</em></h2>
+    </div>
     <div class="research-grid">
-      <div class="research-card"><span class="research-icon">🤖</span><h3>Yapay Zeka</h3><p>Artificial Intelligence</p></div>
-      <div class="research-card"><span class="research-icon">🧠</span><h3>Makine Öğrenmesi & Derin Öğrenme</h3><p>Machine Learning & Deep Learning</p></div>
-      <div class="research-card"><span class="research-icon">💼</span><h3>Yönetim Bilişim Sistemleri</h3><p>Management Information Systems</p></div>
-      <div class="research-card"><span class="research-icon">🏭</span><h3>Endüstri 4.0 ve Dijital Dönüşüm</h3><p>Industry 4.0 & Digital Transformation</p></div>
-      <div class="research-card"><span class="research-icon">👁️</span><h3>Bilgisayarlı Görü</h3><p>Computer Vision</p></div>
-      <div class="research-card"><span class="research-icon">📊</span><h3>Veri Analizi ve Büyük Veri</h3><p>Data Analysis & Big Data</p></div>
-      <div class="research-card"><span class="research-icon">📦</span><h3>Üretim Yönetimi ve Çizelgeleme</h3><p>Production Management & Scheduling</p></div>
-      <div class="research-card"><span class="research-icon">🔍</span><h3>İş Zekası ve Sistemleri</h3><p>Business Intelligence & Systems</p></div>
+      <!-- Yapay Zeka: robot kafa / nöron ağı -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 4V2M16 4V2M3 9h18"/><circle cx="8" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="16" cy="13" r="1" fill="currentColor"/><path d="M8 20h8M12 16v4"/></svg></span><div class="r-title">Yapay Zeka</div><div class="r-sub">Artificial Intelligence</div></div>
+      <!-- Makine Öğrenmesi: nöron bağlantıları -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="4" cy="6" r="2"/><circle cx="4" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="20" cy="4" r="2"/><circle cx="20" cy="20" r="2"/><path d="M6 6l4 5M6 18l4-5M14 11l4-6M14 13l4 6"/></svg></span><div class="r-title">Makine Öğrenmesi & Derin Öğrenme</div><div class="r-sub">Machine Learning & Deep Learning</div></div>
+      <!-- YBS: ekran + ağ -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h3v3H7zM14 8h3v3h-3zM7 13h3M14 13h3"/></svg></span><div class="r-title">Yönetim Bilişim Sistemleri</div><div class="r-sub">Management Information Systems</div></div>
+      <!-- Endüstri 4.0: dişli + bağlantı -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/><circle cx="12" cy="12" r="6" stroke-dasharray="2 2"/></svg></span><div class="r-title">Endüstri 4.0 & Dijital Dönüşüm</div><div class="r-sub">Industry 4.0 & Digital Transformation</div></div>
+      <!-- Bilgisayarlı Görü: göz + çerçeve -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l4 4M21 3l-4 4M3 21l4-4M21 21l-4-4" stroke-width="1"/></svg></span><div class="r-title">Bilgisayarlı Görü</div><div class="r-sub">Computer Vision</div></div>
+      <!-- Veri Analizi: grafik -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><div class="r-title">Veri Analizi & Büyük Veri</div><div class="r-sub">Data Analysis & Big Data</div></div>
+      <!-- Üretim: fabrika bantı -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20V10l5-5 5 5 5-5 5 5v10H2z"/><path d="M9 20v-6h6v6"/></svg></span><div class="r-title">Üretim Yönetimi & Çizelgeleme</div><div class="r-sub">Production Management & Scheduling</div></div>
+      <!-- İş Zekası: dashboard -->
+      <div class="r-card"><span class="r-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><path d="M13 18h9M18 13v10"/></svg></span><div class="r-title">İş Zekası & Sistemleri</div><div class="r-sub">Business Intelligence & Systems</div></div>
     </div>
   </section>
 
+  <!-- INTERESTS -->
   <section id="ilgiler">
-    <div class="section-label">Kişisel İlgi Alanları</div>
-    <h2 class="section-title">Akademinin<br><em>Ötesinde</em></h2>
+    <div class="section-header">
+      <span class="section-num">02 — Kişisel</span>
+      <h2 class="section-title">Akademinin <em>Ötesinde</em></h2>
+    </div>
     <div class="interests-grid">
-      <div class="interest-card"><span class="interest-emoji">🚴</span><span class="interest-name">Bisiklet</span><span class="interest-sub">Şehir & Doğa</span></div>
-      <div class="interest-card"><span class="interest-emoji">🌊</span><span class="interest-name">Deniz</span><span class="interest-sub">Yüzme & Seyir</span></div>
-      <div class="interest-card"><span class="interest-emoji">🎸</span><span class="interest-name">Gitar</span><span class="interest-sub">Elektro (Fender) & Klasik (Sanchez)</span></div>
-      <div class="interest-card"><span class="interest-emoji">🎵</span><span class="interest-name">Rock'n'Roll</span><span class="interest-sub">Klasik & Modern</span></div>
-      <div class="interest-card"><span class="interest-emoji">📷</span><span class="interest-name">Fotoğraf</span><span class="interest-sub">Sokak & Doğa</span></div>
-      <div class="interest-card"><span class="interest-emoji">📚</span><span class="interest-name">Okumak</span><span class="interest-sub">Bilim & Kurgu</span></div>
-      <div class="interest-card"><span class="interest-emoji">✈️</span><span class="interest-name">Seyahat</span><span class="interest-sub">Keşif & Kültür</span></div>
-      <div class="interest-card"><span class="interest-emoji">☕</span><span class="interest-name">Kahve</span><span class="interest-sub">Espresso Based & Filter</span></div>
-      <div class="interest-card"><span class="interest-emoji">🌟</span><span class="interest-name">Galatasaray</span><span class="interest-sub" style="color:#e8a000;font-weight:500;">UEFA Şampiyonlar Ligi 🏆</span></div>
+      <!-- Bisiklet: gerçek bisiklet ikonu -->
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h-3l-2 5.5M5.5 17.5l3-6.5h7l2.5 5"/><circle cx="15" cy="6" r="1" fill="currentColor"/></svg></span><span class="i-name">Bisiklet</span><span class="i-sub">Şehir & Doğa</span></div>
+      <!-- Deniz: dalga ikonu -->
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c1.5-2 3-3 4.5-3s3 1.5 4.5 3 3 3 4.5 3 3-1.5 4.5-3"/><path d="M2 17c1.5-2 3-3 4.5-3s3 1.5 4.5 3 3 3 4.5 3 3-1.5 4.5-3"/><path d="M2 7c1.5-2 3-3 4.5-3s3 1.5 4.5 3 3 3 4.5 3 3-1.5 4.5-3"/></svg></span><span class="i-name">Deniz</span><span class="i-sub">Yüzme & Seyir</span></div>
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span><span class="i-name">Gitar</span><span class="i-sub">Elektrik (Fender) & Klasik (Sanchez)</span></div>
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg></span><span class="i-name">Rock'n'Roll</span><span class="i-sub">Klasik & Modern</span></div>
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></span><span class="i-name">Fotoğraf</span><span class="i-sub">Sokak & Doğa</span></div>
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span><span class="i-name">Okumak</span><span class="i-sub">Bilim & Kurgu</span></div>
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg></span><span class="i-name">Seyahat</span><span class="i-sub">Keşif & Kültür</span></div>
+      <div class="i-card"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 9V3a1 1 0 011-1h10a1 1 0 011 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg></span><span class="i-name">3D Printer</span><span class="i-sub">Baskı & Tasarım</span></div>
+      <div class="i-card i-card--wide"><span class="i-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="i-name">TMMOB Üyeliği</span><span class="i-sub">Makina Mühendisleri Odası (İstanbul Şube)</span></div>
     </div>
   </section>
 
+  <!-- POSITIONS -->
   <section id="gorevler">
-    <div class="section-label">Akademik Görevler</div>
-    <h2 class="section-title">Mevcut<br><em>Pozisyonlar</em></h2>
+    <div class="section-header">
+      <span class="section-num">03 — Görevler</span>
+      <h2 class="section-title">Akademik <em>Pozisyonlar</em></h2>
+    </div>
     <div class="positions">
-      <div class="position-row"><div><div class="position-role">Doktor Öğretim Üyesi</div><div class="position-dept">Yönetim Bilişim Sistemleri Bölümü · Altınbaş Üniversitesi</div></div><div class="position-badge">Aktif</div></div>
-      <div class="position-row"><div><div class="position-role">Bölüm Başkanı</div><div class="position-dept">Yazılım Geliştirme Bölümü · Altınbaş Üniversitesi</div></div><div class="position-badge">Aktif</div></div>
+      <div class="p-row">
+        <div class="p-num">01</div>
+        <div>
+          <div class="p-role">Doktor Öğretim Üyesi</div>
+          <div class="p-dept">Yönetim Bilişim Sistemleri Bölümü · Altınbaş Üniversitesi</div>
+        </div>
+        <div class="p-badge">Aktif</div>
+      </div>
+      <div class="p-row">
+        <div class="p-num">02</div>
+        <div>
+          <div class="p-role">Bölüm Başkanı</div>
+          <div class="p-dept">Yazılım Geliştirme Bölümü · Altınbaş Üniversitesi</div>
+        </div>
+        <div class="p-badge">Aktif</div>
+      </div>
+      <div class="p-row">
+        <div class="p-num">03</div>
+        <div>
+          <div class="p-role">Erasmus Akademik Koordinatörü</div>
+          <div class="p-dept">İdari Görev · Altınbaş Üniversitesi</div>
+        </div>
+        <div class="p-badge">Aktif</div>
+      </div>
     </div>
   </section>
 
-  <section id="profiller">
-    <div class="section-label">Akademik Profiller</div>
-    <h2 class="section-title">Dijital<br><em>Akademik Ağım</em></h2>
-    <div class="profiles-grid">
-      <a class="profile-card" href="https://scholar.google.com/citations?user=RcEwxeQAAAAJ&hl=tr" target="_blank">
-        <div class="profile-icon scholar"><i class="fas fa-graduation-cap"></i></div>
-        <h3>Google Scholar</h3>
-        <p>Publıcatıons & Cıtatıons</p>
-      </a>
-
-      <a class="profile-card" href="https://orcid.org/0000-0001-5572-5058" target="_blank">
-        <div class="profile-icon orcid"><i class="fab fa-orcid"></i></div>
-        <h3>ORCID</h3>
-        <p>0000-0001-5572-5058</p>
-      </a>
-
-      <a class="profile-card" href="https://www.linkedin.com/in/incilayyildiz" target="_blank">
-        <div class="profile-icon linkedin"><i class="fab fa-linkedin"></i></div>
-        <h3>LinkedIn</h3>
-        <p>Professıonal Profıle</p>
-      </a>
-    </div>
-  </section>
-
+  <!-- CONTACT -->
   <section id="iletisim">
-    <div class="section-label">İletişim</div>
-    <h2 class="section-title">Mail<br><em>Tel</em></h2>
-    <div class="contact-info" style="max-width:560px;">
-      <div class="contact-item"><span class="contact-label">E-posta</span><span class="contact-value"><a href="mailto:incilay.yildiz@altinbas.edu.tr">incilay.yildiz@altinbas.edu.tr</a></span></div>
-      <div class="contact-item"><span class="contact-label">Telefon</span><span class="contact-value"><a href="tel:+902126040100">+90 (212) 604 01 00 / 2534</a></span></div>
-      <div class="contact-item"><span class="contact-label">Kampüs</span><span class="contact-value">Gayrettepe Sosyal Bilimler Yerleşkesi</span></div>
-      <div class="contact-item"><span class="contact-label">Web</span><span class="contact-value"><a href="https://web.altinbas.edu.tr/incilay.yildiz" target="_blank">web.altinbas.edu.tr/incilay.yildiz</a></span></div>
+    <div class="section-header">
+      <span class="section-num">04 — İletişim</span>
+      <h2 class="section-title">Bana <em>Ulaşın</em></h2>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-list">
+        <div class="c-item">
+          <span class="c-label">E-posta</span>
+          <span class="c-val"><a href="mailto:incilay.yildiz@altinbas.edu.tr">incilay.yildiz@altinbas.edu.tr</a></span>
+        </div>
+        <div class="c-item">
+          <span class="c-label">Telefon</span>
+          <span class="c-val"><a href="tel:+902126040100">+90 (212) 604 01 00 / 2534</a></span>
+        </div>
+        <div class="c-item">
+          <span class="c-label">Kampüs</span>
+          <span class="c-val">Altınbaş Üniversitesi<br><span style="font-size:0.85rem;color:var(--text3);">Gayrettepe Sosyal Bilimler Yerleşkesi</span></span>
+        </div>
+        <div class="c-item">
+          <span class="c-label">Web</span>
+          <span class="c-val"><a href="https://web.altinbas.edu.tr/incilay.yildiz" target="_blank">web.altinbas.edu.tr/incilay.yildiz</a></span>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-title">İş Birliği İçin</div>
+        <div class="cc-body">
+          Yapay zekâ, makine öğrenmesi, bilgisayarlı görü, veri analitiği, yönetim bilişim sistemleri, iş zekâsı ve dijital dönüşüm alanlarında akademik iş birliği geliştirme, araştırma projeleri yürütme ve öğrenci danışmanlığı konularında iletişime geçebilirsiniz.
+        </div>
+        <div class="cc-univ">İstanbul, Türkiye · 2026</div>
+      </div>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
-    <span class="footer-text">© 2026 Dr. İncilay Yıldız · Altınbaş Üniversitesi</span>
+    <span class="footer-copy">© 2026 Dr. İncilay Yıldız · Altınbaş Üniversitesi</span>
     <div class="footer-dot"></div>
-    <span class="footer-text">İstanbul, Türkiye</span>
+    <span class="footer-copy">İstanbul, Türkiye</span>
   </footer>
 
   <script>
-    const days=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-    const months=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const D=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+    const M=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
     const now=new Date();
-    document.getElementById('gunluk-date-label').textContent=days[now.getDay()]+' '+now.getDate()+' '+months[now.getMonth()];
-    const KEY='gunluk_'+now.toISOString().slice(0,10);
-    const textEl=document.getElementById('gunluk-text');
-    const inputEl=document.getElementById('gunluk-input');
-    const btnEl=document.getElementById('gunluk-btn');
-    const charEl=document.getElementById('gunluk-char');
-    const saved=localStorage.getItem(KEY);
-    if(saved)textEl.textContent=saved;
-    let editing=false;
-    function toggleGunluk(){
-      editing=!editing;
-      if(editing){
-        inputEl.value=(textEl.textContent==='✦ Bugün ne var?')?'':textEl.textContent;
-        textEl.style.display='none';inputEl.style.display='block';charEl.style.display='inline';
-        charEl.textContent=50-inputEl.value.length;btnEl.textContent='Kaydet';inputEl.focus();
-      }else{
-        const val=inputEl.value.trim();
-        textEl.textContent=val||'✦ Bugün ne var?';
-        if(val)localStorage.setItem(KEY,val);
-        textEl.style.display='block';inputEl.style.display='none';charEl.style.display='none';btnEl.textContent='Düzenle';
-      }
-    }
-    inputEl.addEventListener('input',()=>{charEl.textContent=50-inputEl.value.length;});
-    inputEl.addEventListener('keydown',(e)=>{if(e.key==='Enter')toggleGunluk();});
-    textEl.addEventListener('click',()=>{if(!editing)toggleGunluk();});
+    document.getElementById('banner-day-num').textContent=now.getDate();
+    document.getElementById('banner-weekday').textContent=D[now.getDay()];
+    document.getElementById('banner-month').textContent=M[now.getMonth()]+' '+now.getFullYear();
   </script>
 </body>
 </html>
