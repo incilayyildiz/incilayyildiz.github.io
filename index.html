@@ -44,33 +44,9 @@
     }
 
     /* ── BANNER ── */
-    #banner {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-      height: 36px;
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      gap: 1.5rem;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .banner-sep { width: 1px; height: 12px; background: var(--border); }
-    .banner-day {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-style: italic; font-weight: 400;
-      color: var(--gold); line-height: 1;
-    }
-    .banner-weekday {
-      font-size: 0.6rem; letter-spacing: 0.25em;
-      color: var(--text2); text-transform: uppercase;
-    }
-    .banner-month {
-      font-size: 0.6rem; letter-spacing: 0.15em;
-      color: var(--text3); text-transform: uppercase;
-    }
-
     /* ── NAV ── */
     nav {
-      position: fixed; top: 36px; left: 0; right: 0; z-index: 400;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 400;
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 3rem;
       height: 56px;
@@ -106,7 +82,7 @@
       min-height: 100vh;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      padding-top: 92px;
+      padding-top: 56px;
       position: relative; overflow: hidden;
     }
     .hero-bg {
@@ -598,15 +574,6 @@
 </head>
 <body>
 
-  <!-- BANNER -->
-  <div id="banner">
-    <span class="banner-weekday" id="banner-weekday"></span>
-    <div class="banner-sep"></div>
-    <span class="banner-day" id="banner-day-num"></span>
-    <div class="banner-sep"></div>
-    <span class="banner-month" id="banner-month"></span>
-  </div>
-
   <!-- NAV -->
   <nav>
     <div class="nav-brand"><span>Dr.</span> İncilay Yıldız</div>
@@ -774,14 +741,6 @@
   </footer>
 
   <script>
-    // Date
-    const D=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-    const M=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-    const now=new Date();
-    document.getElementById('banner-day-num').textContent=now.getDate();
-    document.getElementById('banner-weekday').textContent=D[now.getDay()];
-    document.getElementById('banner-month').textContent=M[now.getMonth()]+' '+now.getFullYear();
-
     // Neural Network Animation
     const canvas = document.getElementById('neural-canvas');
     const ctx = canvas.getContext('2d');
