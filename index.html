@@ -121,28 +121,31 @@
       display: contents;
     }
     .hero-left {
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
       padding: 4rem 3rem;
-      text-align: center;
+      text-align: left;
     }
-    .hero-left .hero-eyebrow { text-align: center; }
-    .hero-left .hero-name { justify-content: center; }
-    .hero-left .hero-bio { text-align: center; }
-    .hero-left .hero-actions { justify-content: center; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .hero-left .hero-eyebrow { text-align: left; }
+    .hero-left .hero-name { justify-content: flex-start; }
+    .hero-left .hero-bio { text-align: left; }
+    .hero-left .hero-actions { justify-content: flex-start; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
     .hero-right-info {
       position: relative;
       overflow: hidden;
+      background: var(--bg);
     }
-    .hero-right-info img.hero-photo-full {
+    #neural-canvas {
+      position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: cover; object-position: center 15%;
       display: block;
-      filter: grayscale(10%) contrast(1.05);
     }
     .hero-right-info::after {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 55%, rgba(12,14,18,0.75) 100%);
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(12,14,18,0.9) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 0% 50%, rgba(12,14,18,0.5) 0%, transparent 50%);
+      pointer-events: none;
     }
     .hero-right-overlay {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -629,20 +632,18 @@
         </p>
         <div class="hero-actions">
           <a href="https://akademik.yok.gov.tr/AkademikArama/view/viewAuthor.jsp" target="_blank" class="btn-primary">Akademik CV</a>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;">
-            <a href="https://scholar.google.com.tr/citations?user=RcEwxeQAAAAJ&hl=tr" target="_blank" class="membership-badge">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-              Google Scholar
-            </a>
-            <a href="https://www.linkedin.com/in/incilayyildiz/" target="_blank" class="membership-badge">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-              LinkedIn
-            </a>
-          </div>
+          <a href="https://scholar.google.com.tr/citations?user=RcEwxeQAAAAJ&hl=tr" target="_blank" class="btn-primary" style="background:transparent;color:var(--text2);border-color:var(--border);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:0.4rem;vertical-align:middle;"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+            Google Scholar
+          </a>
+          <a href="https://www.linkedin.com/in/incilayyildiz/" target="_blank" class="btn-primary" style="background:transparent;color:var(--text2);border-color:var(--border);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:0.4rem;vertical-align:middle;"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
         </div>
       </div>
       <div class="hero-right-info">
-        <img src="photo.jpg" class="hero-photo-full" alt="Dr. İncilay Yıldız"/>
+        <canvas id="neural-canvas"></canvas>
         <div class="hero-right-overlay"></div>
       </div>
     </div>
@@ -772,12 +773,154 @@
   </footer>
 
   <script>
+    // Date
     const D=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
     const M=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
     const now=new Date();
     document.getElementById('banner-day-num').textContent=now.getDate();
     document.getElementById('banner-weekday').textContent=D[now.getDay()];
     document.getElementById('banner-month').textContent=M[now.getMonth()]+' '+now.getFullYear();
+
+    // Neural Network Animation
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const GOLD = 'rgba(200,160,80,';
+    const BLUE = 'rgba(200,60,60,';
+
+    // Nodes
+    const nodes = [];
+    const NODE_COUNT = 42;
+
+    function initNodes() {
+      nodes.length = 0;
+      for (let i = 0; i < NODE_COUNT; i++) {
+        nodes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          r: Math.random() * 2.5 + 1,
+          pulse: Math.random() * Math.PI * 2,
+          pulseSpeed: 0.02 + Math.random() * 0.02,
+          type: Math.random() > 0.7 ? 'hub' : 'node',
+        });
+      }
+    }
+    initNodes();
+
+    // Data packets flowing along edges
+    const packets = [];
+    function spawnPacket(from, to) {
+      packets.push({ from, to, t: 0, speed: 0.008 + Math.random() * 0.008 });
+    }
+
+    let frame = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      frame++;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const W = canvas.width, H = canvas.height;
+
+      // Move nodes
+      nodes.forEach(n => {
+        n.x += n.vx; n.y += n.vy; n.pulse += n.pulseSpeed;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      });
+
+      // Draw edges
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          const maxDist = W * 0.22;
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * 0.18;
+            const isGold = (i + j) % 3 === 0;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = isGold ? GOLD + alpha + ')' : BLUE + alpha + ')';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+
+            // Spawn packets occasionally
+            if (frame % 90 === 0 && Math.random() < 0.12 && dist < maxDist * 0.6) {
+              spawnPacket(i, j);
+            }
+          }
+        }
+      }
+
+      // Draw packets
+      for (let p = packets.length - 1; p >= 0; p--) {
+        const pk = packets[p];
+        pk.t += pk.speed;
+        if (pk.t >= 1) { packets.splice(p, 1); continue; }
+        const a = nodes[pk.from], b = nodes[pk.to];
+        const x = a.x + (b.x - a.x) * pk.t;
+        const y = a.y + (b.y - a.y) * pk.t;
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = GOLD + '0.9)';
+        ctx.fill();
+        // Trail
+        const tx = a.x + (b.x - a.x) * Math.max(0, pk.t - 0.08);
+        const ty = a.y + (b.y - a.y) * Math.max(0, pk.t - 0.08);
+        ctx.beginPath();
+        ctx.moveTo(tx, ty);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = GOLD + '0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // Draw nodes
+      nodes.forEach(n => {
+        const glow = Math.sin(n.pulse) * 0.5 + 0.5;
+        if (n.type === 'hub') {
+          // Outer ring
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 3.5, 0, Math.PI * 2);
+          ctx.strokeStyle = GOLD + (0.08 + glow * 0.12) + ')';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+          // Core
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 1.4, 0, Math.PI * 2);
+          ctx.fillStyle = GOLD + (0.5 + glow * 0.5) + ')';
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fillStyle = BLUE + (0.3 + glow * 0.4) + ')';
+          ctx.fill();
+        }
+      });
+
+      // Subtle grid overlay
+      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+      ctx.lineWidth = 0.5;
+      const gridSize = 60;
+      for (let x = 0; x < W; x += gridSize) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y < H; y += gridSize) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+    }
+
+    animate();
   </script>
 </body>
 </html>
