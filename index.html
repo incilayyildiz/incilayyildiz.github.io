@@ -121,14 +121,14 @@
       display: contents;
     }
     .hero-left {
-      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
       padding: 4rem 3rem;
-      text-align: left;
+      text-align: center;
     }
-    .hero-left .hero-eyebrow { text-align: left; }
-    .hero-left .hero-name { justify-content: flex-start; }
-    .hero-left .hero-bio { text-align: left; }
-    .hero-left .hero-actions { justify-content: flex-start; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .hero-left .hero-eyebrow { text-align: center; }
+    .hero-left .hero-name { justify-content: center; align-items: center; }
+    .hero-left .hero-bio { text-align: center; }
+    .hero-left .hero-actions { justify-content: center; flex-direction: column; align-items: center; gap: 0.75rem; }
     .hero-right-info {
       position: relative;
       overflow: hidden;
@@ -194,7 +194,7 @@
       letter-spacing: -0.01em;
       margin-bottom: 0.5rem;
       opacity: 0; animation: rise 0.7s ease forwards 0.25s;
-      display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;
     }
 
     .hero-name .dr { color: var(--gold); font-style: italic; }
@@ -205,6 +205,7 @@
       border: 2px solid var(--gold);
       flex-shrink: 0;
       filter: grayscale(10%);
+      align-self: center;
     }
 
     .hero-stat {
@@ -235,8 +236,8 @@
     .hero-role {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.65rem; letter-spacing: 0.15em;
-      color: var(--text2); text-transform: uppercase;
-      margin-bottom: 2rem;
+      color: var(--gold); text-transform: uppercase;
+      margin-bottom: 0.5rem;
       opacity: 0; animation: rise 0.7s ease forwards 0.4s;
     }
 
@@ -623,11 +624,11 @@
     <div class="hero-bg"></div>
     <div class="hero-content">
       <div class="hero-left">
-        <span class="hero-eyebrow">Altınbaş Üniversitesi · İstanbul</span>
-        <h1 class="hero-name"><img src="photo.jpg" class="hero-avatar" alt=""/><span><span class="dr">Dr.</span> İncilay<br>Yıldız</span></h1>
+        <h1 class="hero-name"><img src="photo.jpg" class="hero-avatar" alt=""/><span><span class="dr">Dr.</span> İncilay Yıldız</span></h1>
         <p class="hero-role">Doktor Öğretim Üyesi &nbsp;·&nbsp; Bölüm Başkanı</p>
+        <span class="hero-eyebrow" style="color:var(--text);margin-bottom:2rem;">Altınbaş Üniversitesi · İstanbul</span>
         <p class="hero-bio">
-          Yapay zeka alanlarında araştırma yürüten Endüstri Mühendisi ve Akademisyen.
+          Yapay zeka alanlarında araştırma yürüten Endüstri Mühendisi ve Akademisyen.<br>
           Yönetim Bilişim Sistemleri ve Yazılım Geliştirme bölümlerinde görev yapmaktadır.
         </p>
         <div class="hero-actions">
